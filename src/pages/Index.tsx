@@ -3,6 +3,7 @@ import { Loader2, Lock, Zap } from 'lucide-react';
 import { useEphemeralUser } from '@/hooks/useEphemeralUser';
 import { useFriendRequests, type Friend } from '@/hooks/useFriendRequests';
 import { useMessages } from '@/hooks/useMessages';
+import { useTypingIndicator } from '@/hooks/useTypingIndicator';
 import { UserIdentity } from '@/components/UserIdentity';
 import { AddFriend } from '@/components/AddFriend';
 import { FriendRequestPopup } from '@/components/FriendRequestPopup';
@@ -27,6 +28,16 @@ const Index = () => {
     user?.privateKey,
     selectedFriend?.publicKey
   );
+
+  const { friendIsTyping, startTyping, stopTyping } = useTypingIndicator(
+    user?.id,
+    selectedFriend?.id
+  );
+
+  const handleSendMessage = (content: string, options?: { expiresInSeconds?: number; file?: File }) => {
+    sendMessage(content, options);
+    stopTyping();
+  };
 
   if (userLoading) {
     return (
@@ -100,8 +111,10 @@ const Index = () => {
                 friend={selectedFriend}
                 messages={messages}
                 isLoading={messagesLoading}
-                onSendMessage={sendMessage}
+                friendIsTyping={friendIsTyping}
+                onSendMessage={handleSendMessage}
                 onBack={() => setSelectedFriend(undefined)}
+                onInputChange={startTyping}
               />
             ) : (
               <div className="glass rounded-xl h-[500px] flex items-center justify-center">
@@ -121,8 +134,10 @@ const Index = () => {
                 friend={selectedFriend}
                 messages={messages}
                 isLoading={messagesLoading}
-                onSendMessage={sendMessage}
+                friendIsTyping={friendIsTyping}
+                onSendMessage={handleSendMessage}
                 onBack={() => setSelectedFriend(undefined)}
+                onInputChange={startTyping}
               />
             </div>
           )}
