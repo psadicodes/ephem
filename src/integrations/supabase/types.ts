@@ -114,24 +114,39 @@ export type Database = {
         Row: {
           created_at: string
           encrypted_content: string
+          expires_at: string | null
+          file_name: string | null
+          file_size: number | null
+          file_type: string | null
           id: string
           iv: string
+          message_type: string
           receiver_id: string
           sender_id: string
         }
         Insert: {
           created_at?: string
           encrypted_content: string
+          expires_at?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_type?: string | null
           id?: string
           iv: string
+          message_type?: string
           receiver_id: string
           sender_id: string
         }
         Update: {
           created_at?: string
           encrypted_content?: string
+          expires_at?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_type?: string | null
           id?: string
           iv?: string
+          message_type?: string
           receiver_id?: string
           sender_id?: string
         }
@@ -157,7 +172,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      cleanup_expired_messages: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
